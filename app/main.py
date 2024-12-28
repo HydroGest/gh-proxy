@@ -199,4 +199,5 @@ def proxy(u, allow_redirects=False):
 
 app.debug = True
 if __name__ == '__main__':
+    app.debug = False
     app.run(host=HOST, port=PORT)
