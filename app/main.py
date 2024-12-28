@@ -61,6 +61,8 @@ def index():
 
 @app.route('/favicon.ico')
 def icon():
+    if 'Transfer-Encoding' in headers:
+        headers.pop('Transfer-Encoding')
     return Response(icon_r, content_type='image/vnd.microsoft.icon')
 
 
@@ -128,15 +130,21 @@ def handler(u):
                 if m[:len(i)] == i or i[0] == '*' and len(m) == 2 and m[1] == i[1]:
                     break
             else:
+                if 'Transfer-Encoding' in headers:
+                    headers.pop('Transfer-Encoding')
                 return Response('Forbidden by white list.', status=403)
         for i in black_list:
             if m[:len(i)] == i or i[0] == '*' and len(m) == 2 and m[1] == i[1]:
+                if 'Transfer-Encoding' in headers:
+                    headers.pop('Transfer-Encoding')
                 return Response('Forbidden by black list.', status=403)
         for i in pass_list:
             if m[:len(i)] == i or i[0] == '*' and len(m) == 2 and m[1] == i[1]:
                 pass_by = True
                 break
     else:
+        if 'Transfer-Encoding' in headers:
+            headers.pop('Transfer-Encoding')
         return Response('Invalid input.', status=403)
 
     if (jsdelivr or pass_by) and exp2.match(u):
@@ -184,10 +192,13 @@ def proxy(u, allow_redirects=False):
                 headers['Location'] = '/' + _location
             else:
                 return proxy(_location, True)
-
+        if 'Transfer-Encoding' in headers:
+            headers.pop('Transfer-Encoding')
         return Response(generate(), headers=headers, status=r.status_code)
     except Exception as e:
         headers['content-type'] = 'text/html; charset=UTF-8'
+        if 'Transfer-Encoding' in headers:
+            headers.pop('Transfer-Encoding')
         return Response('server error ' + str(e), status=500, headers=headers)
 
 app.debug = True
