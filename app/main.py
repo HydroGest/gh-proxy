@@ -141,8 +141,6 @@ def handler(u):
                 pass_by = True
                 break
     else:
-        if 'Transfer-Encoding' in headers:
-            headers.pop('Transfer-Encoding')
         return Response('Invalid input.', status=403)
 
     if (jsdelivr or pass_by) and exp2.match(u):
