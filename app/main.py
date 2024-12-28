@@ -2,7 +2,7 @@
 import re
 
 import requests
-from flask import Flask, Response, redirect, request
+from flask import Flask, Response, redirect, request, render_template
 from requests.exceptions import (
     ChunkedEncodingError,
     ContentDecodingError, ConnectionError, StreamConsumedError)
@@ -14,7 +14,7 @@ from urllib.parse import quote
 
 # config
 # 分支文件使用jsDelivr镜像的开关，0为关闭，默认关闭
-jsdelivr = 0
+jsdelivr = 1
 size_limit = 1024 * 1024 * 1024 * 999  # 允许的文件大小，默认999GB，相当于无限制了 https://github.com/hunshcn/gh-proxy/issues/8
 
 """
@@ -33,7 +33,7 @@ pass_list = '''
 '''
 
 HOST = '127.0.0.1'  # 监听地址，建议监听本地然后由web服务器反代
-PORT = 80  # 监听端口
+PORT = 8008  # 监听端口
 ASSET_URL = 'https://hunshcn.github.io/gh-proxy'  # 主页
 
 white_list = [tuple([x.replace(' ', '') for x in i.split('/')]) for i in white_list.split('\n') if i]
@@ -56,7 +56,7 @@ requests.sessions.default_headers = lambda: CaseInsensitiveDict()
 def index():
     if 'q' in request.args:
         return redirect('/' + request.args.get('q'))
-    return index_html
+    return render_template('index.html')
 
 
 @app.route('/favicon.ico')
