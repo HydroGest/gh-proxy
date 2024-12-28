@@ -61,8 +61,6 @@ def index():
 
 @app.route('/favicon.ico')
 def icon():
-    if 'Transfer-Encoding' in headers:
-        headers.pop('Transfer-Encoding')
     return Response(icon_r, content_type='image/vnd.microsoft.icon')
 
 
